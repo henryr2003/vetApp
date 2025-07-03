@@ -3,17 +3,18 @@ import { useEffect, useState } from 'react';
 function App() {
   const [pets, setPets] = useState([]);
   const [form, setForm] = useState({ name: '', type: '', age: '' });
-
+  const API = import.meta.env.VITE_API_URL;
   // Load pets from backend
+
   useEffect(() => {
-    fetch('http://localhost:3001/pets')
-      .then(res => res.json())
-      .then(setPets);
-  }, []);
+  fetch(`${API}/pets`)
+    .then(res => res.json())
+    .then(setPets);
+}, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('http://localhost:3001/pets', {
+    fetch(`${API}/pets`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form),
