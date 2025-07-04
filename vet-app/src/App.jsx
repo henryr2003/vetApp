@@ -26,6 +26,25 @@ function App() {
       });
   };
 
+  const handleDelete = (id) => {
+    fetch(`${API}/pets/${id}`, {
+      method: 'DELETE',
+    })
+
+    .then(res => {
+      if(!res.ok) throw new Error ("Could not delete");
+
+      setPets(pets.filter(pet => pet._id !== id));
+
+    })
+
+    .catch(err => {
+      console.log(err);
+      alert("could not delete pet");
+
+    })
+  }
+
   return (
     <div>
       <h1>Vet App</h1>
@@ -37,7 +56,11 @@ function App() {
       </form>
       <ul>
         {pets.map(pet => (
-          <li key={pet._id}>{pet.name} ({pet.type}) - Age: {pet.age}</li>
+          <li key={pet._id}>
+            {pet.name} ({pet.type}) - Age: {pet.age}
+
+            <button className='deleteButton'  onClick={() => handleDelete(pet._id)}> Delete </button>
+          </li>
         ))}
       </ul>
     </div>
