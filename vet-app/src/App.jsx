@@ -4,12 +4,23 @@ function App() {
   const [pets, setPets] = useState([]);
   const [form, setForm] = useState({ name: '', type: '', age: '' });
   const API = import.meta.env.VITE_API_URL;
+  
   // Load pets from backend
 
   useEffect(() => {
   fetch(`${API}/pets`)
-    .then(res => res.json())
-    .then(setPets);
+  .then(res => {
+    const contentType = res.headers.get("content-type");
+    if (!res.ok || !contentType.includes("application/json")) {
+      throw new Error("Invalid JSON response");
+    }
+    return res.json();
+  })
+  .then(setPets)
+  .catch(err => {
+    console.error("Error fetching pets:", err);
+  });
+
 }, []);
 
   const handleSubmit = (e) => {
