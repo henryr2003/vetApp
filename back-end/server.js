@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const corsOptions = {
-  origin: ['http://localhost:5175', 'https://vet-app-snowy.vercel.app'],
+  origin: ['http://localhost:5175', 'https://vet-app-snowy.vercel.app', 'http://localhost:5174' ],
   methods: ['GET', 'POST', 'DELETE'],
   credentials: true
 };
