@@ -1,12 +1,32 @@
 
 
-import {Link} from "react-router-dom" 
 
-const handleSubmit = () => {
-    console.log()
-}
+import {useAuth} from "../hooks/useAuth"
+import {useState} from "react"
+import {useNavigate} from "react-router-dom"
+
+
 const Login = () => {
-    
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const {login} = useAuth()
+    const navigate = useNavigate();
+
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!email || !password) return alert('Both fields are required');
+
+        const { error } = await login(email, password);
+        if (error) {
+            alert(error.message || 'Sign Up Failed');
+            return;
+        }
+
+        navigate('/');
+    }
 
     return (
         <>
@@ -14,11 +34,12 @@ const Login = () => {
 
             <form onSubmit={handleSubmit}> 
 
-                <input placeholder="Username" /> 
-                <input placeholder="Password" />
+                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} /> 
+                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                <button type="submit"> Submit </button>
             </form>    
 
-            <h1> If you don't have an account you can sign up <Link to="/signup"> here</Link> </h1>   
+            
         </>
     )
 }
