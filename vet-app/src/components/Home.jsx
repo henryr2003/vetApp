@@ -11,7 +11,7 @@ function Home() {
   const [pets, setPets] = useState([]);
   const [form, setForm] = useState({ name: '', type: '', age: '' });
   const [isTabOpen, setTab] = useState(false);
-  
+  const [isAddPetOpen, setAdd] = useState(false);
   const {user, logout } = useAuth();
     // const user = true;
   const {getData, addData, deleteData} = useData();
@@ -42,20 +42,26 @@ function Home() {
 const handleSubmit = async (e) => {
     e.preventDefault()
     console.log('adding pet');
-    const {data, error, status} = await addData(form.name, form.type, form.age);
+    if(form.age && form.name && form.type){
+      const {data, error} = await addData(form.name, form.type, form.age);
     if(error){
       console.error(error)
       return
     }
     if(data) console.log('data from adding: ', data);
     
-    setPets( (prevPets) => [...prevPets, {name: form.name, type: form.type, age: form.age}]);
+    setPets( (prevPets) => [...prevPets, data[0]]);
     setForm({ name: '', type: '', age: '' });
+    toggleAddPet();
+    }
+    else{
+      alert("Fill out all forms please")
+    }
 }
 
 const handleDelete = async (id) => {
 
-  
+  console.log("pets: ", pets)
   console.log("delete key: ", id)
 
   const {data, error} = await deleteData(id);
@@ -77,11 +83,11 @@ const handleLogOut = async () => {
     console.log("logout");
     
 
-    const {error} = await logout();
-
-    if(error){
-      alert("Unable to logout: ", error);
-    }
+     try {
+    await logout();
+  } catch (error) {
+    alert("Unable to logout: " + error.message);
+  }
   }
 
 function toggleTab() {
@@ -89,6 +95,21 @@ function toggleTab() {
   console.log("changing tab");
   
 }
+
+function toggleAddPet() {
+  
+  setAdd(prev => !prev);
+  
+
+ 
+  
+  console.log("adding pet maybe");
+}
+
+function clearForm(){
+  setForm({ name: '', type: '', age: '' })
+}
+
   return (
     <>
 
@@ -98,9 +119,9 @@ function toggleTab() {
           </div>
           {!user && <Link className="login" to="/login"> Login </Link> }
 
-          {user && <button onClick={() => {handleLogOut(); toggleTab()}}> Log Out </button>}
+          {user && <div className="login" onClick={() => {handleLogOut(); toggleTab()}}> Log Out </div>}
           
-        </div>
+    </div>
     
     <div className="mainContainer" onClick={isTabOpen ? toggleTab : undefined} >
 
@@ -123,31 +144,57 @@ function toggleTab() {
 
       
       
-      {user && <>
+      {user && 
       
-        
-
-    <form onSubmit={handleSubmit}>
+      <>
+      
+    {!isAddPetOpen ? <button className='addPet' onClick={toggleAddPet}> + Add Pet</button> : undefined }
+    
+    <form className= {`addPetForm ${isAddPetOpen ? "open" : ""}`} onSubmit={handleSubmit}>
+      <div className='closeForm' onClick={() => {toggleAddPet(); clearForm()}}> X </div>
         <input placeholder="Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
         <input placeholder="Type" value={form.type} onChange={e => setForm({ ...form, type: e.target.value })} />
         <input placeholder="Age" value={form.age} onChange={e => setForm({ ...form, age: e.target.value })} />
-        <button type="submit">Add Pet</button>
-      </form>
+        <button type="submit" >Check In</button>
+    </form>
+    
+    
+    
+    
       </>
     
     
     }
       
       <ul>
-        {pets.map(pet => (
-          <div>
-              <li key={pet.id}>
-              {pet.name} ({pet.type}) - Age: {pet.age}
-              {user && <button className='deleteButton'  onClick={() => handleDelete(pet.id)}> Delete </button>}
-            
-          </li>
+        {pets.map((pet, index) => (
+          <>
+          
+         
+          {index == 0 && 
+            <h2> Currently Attending</h2>
+          }
+          <div key={pet.id} className={index == 0 ? "petCardMain" : "petCard"}>
+            <li key={pet.id}>
+
+              <div className="topRowMainCard"> {pet.name} </div>
+              <div className='middleRowMainCard'> {pet.type}</div>
+              {user && <>
+              
+              <button className="editButton"> Edit</button>
+
+              <button className='deleteButton'  onClick={() => handleDelete(pet.id)}> Delete </button>
+              
+              
+
+              </>
+              }
+                
+            </li>
           
           </div>
+
+           </>
           
           
           

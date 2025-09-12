@@ -4,7 +4,7 @@ import {useAuth} from "../hooks/useAuth"
 import {useState} from "react"
 import {useNavigate} from "react-router-dom"
 
-
+import "../styles/login.css"
 
 const Signup = () => {
     const [email, setEmail] = useState("");
@@ -33,14 +33,20 @@ const Signup = () => {
 
     return (
         <>
-            <h1> Sign up! </h1> 
+
+            <div className="mainContainer">
+            <h1> Sign Up </h1> 
 
             <form onSubmit={handleSubmit}> 
 
                 <input type="email" value={email} placeholder="Email" onChange = {(e) => setEmail(e.target.value)}/> 
                 <input type="password" value={password} placeholder="Password" onChange = {(e) => setPassword(e.target.value)}/>
                 <button type="submit"> Submit</button>
-            </form>        
+            </form>      
+
+
+            </div>
+              
         </>
     )
 }
