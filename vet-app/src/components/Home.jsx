@@ -4,7 +4,9 @@ import {useData} from "../hooks/useData"
 import {Link} from "react-router-dom"
 import amvcLogo from "../img/amvcLogo.webp"
 // import {ReactComponent as MyIcon} from "../img/accountLogo.svg"
-
+import CatIcon from "../img/cat.svg?react"
+import DogIcon from "../img/dog.svg?react"
+import OtherIcon from "../img/otherIcon.svg?react"
 import "../styles/Home.css"
 
 function Home() {
@@ -168,16 +170,24 @@ function clearForm(){
       
       <ul>
         {pets.map((pet, index) => (
+          
           <>
           
          
-          {index == 0 && 
-            <h2> Currently Attending</h2>
-          }
-          <div key={pet.id} className={index == 0 ? "petCardMain" : "petCard"}>
-            <li key={pet.id}>
+          {index == 0 ?
+            <h2 key={pet.id + 1}> Currently Attending</h2>
 
-              <div className="topRowMainCard"> {pet.name} </div>
+            : index == 1 ? <h2 key={pet.id + 1}> Waiting . . .</h2> : undefined
+          }
+          <li key={pet.id} className={`petCard ${!user ? "petCardNoUser" : ""} ${index != 0 ? "normalCard" : ""}`}>
+            
+
+              <div className="topRowMainCard"> 
+                <h3>{pet.name} </h3> 
+
+                {pet.type == "Dog" ? <DogIcon className="dogIcon"/> : pet.type == "Cat" ? <CatIcon className="dogIcon" /> : <OtherIcon className="otherIcon" />}
+              </div>
+
               <div className='middleRowMainCard'> {pet.type}</div>
               {user && <>
               
@@ -186,13 +196,12 @@ function clearForm(){
               <button className='deleteButton'  onClick={() => handleDelete(pet.id)}> Delete </button>
               
               
-
               </>
               }
                 
-            </li>
+           
           
-          </div>
+          </li>
 
            </>
           
