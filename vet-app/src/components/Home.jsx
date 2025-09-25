@@ -8,7 +8,7 @@ import CatIcon from "../img/cat.svg?react"
 import DogIcon from "../img/dog.svg?react"
 import OtherIcon from "../img/otherIcon.svg?react"
 import "../styles/Home.css"
-import AddPetForm from './addPetForm';
+import AddPetForm from './AddPetForm';
 import EditPetForm from './EditPetForm';
 import CheckPet from "./CheckPet";
 
