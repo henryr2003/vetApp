@@ -10,6 +10,9 @@ import OtherIcon from "../img/otherIcon.svg?react"
 import "../styles/Home.css"
 import AddPetForm from './addPetForm';
 import EditPetForm from './EditPetForm';
+import CheckPet from "./CheckPet";
+
+
 
 function Home() {
   const [pets, setPets] = useState([]);
@@ -20,8 +23,20 @@ function Home() {
     // const user = true;
   const {getData, addData, editData, deleteData} = useData();
 
-  const [editForm, setEditForm] = useState({name: "", type: "", breed: "", status: "", estimate: ""})
+  const [editForm, setEditForm] = useState({name: "", type: "", breed: "", status: "", estimateMinutes: "00", estimateHours: "00"})
   const [isEditOpen, setEditOpen] = useState(false);
+
+  const [isCheckOpen, setCheck] = useState(false);
+  const [currentSelectedPet, setCurrentSelectedPet] = useState({});
+
+  const getAndSetPets = async () => {
+    const { data, error } = await getData();
+    if (error) {
+      console.error("Failed to fetch data after add:", error);
+      return;
+    }
+    setPets(data);
+  };
 
   useEffect( () => {
       const getPets = async () => {
@@ -45,29 +60,31 @@ function Home() {
 
 
   }, []) 
-
-  
-
   
   console.log("using auth");
+
   // Load pets from backend
-
-
-
 const handleSubmit = async (e) => {
     e.preventDefault()
     console.log('adding pet');
+
     if(form.name && form.type){
-      const {data, error} = await addData(form.name, form.type, form.breed);
+      const {data, error} = await addData(form.name, form.type, form.breed, );
     if(error){
       console.error(error)
       return
     }
-    if(data) console.log('data from adding: ', data);
+    if(data) {
+      setPets(prev => [...prev,data]);
+      console.log('data from adding: ', data);
+    }
+
     
     
+
     setForm({ name: '', type: '', breed: '' });
     toggleAddPet();
+
     }
     else{
       alert("Fill out all forms please")
@@ -80,23 +97,19 @@ const handleEdit = async (e, id) => {
   console.log("edit", editForm.id);
 
   console.log(editForm);
+  const combinedEstimate = editForm.estimateHours + ":" + editForm.estimateMinutes;
+  const newForm = {...editForm, estimate: combinedEstimate}
+  delete newForm.estimateHours;
+  delete newForm.estimateMinutes;
 
-  const {data, error} = await editData(editForm.id, editForm)
+  const {data, error} = await editData(editForm.id, newForm)
 
   if(error){
     console.error(error);
     return
   }
 
-  setPets( (prevPets) => prevPets.map(pet =>{
-
-
-      console.log("pet: ", pet);
-      console.log("pet.id: ", pet.id);
-      console.log("id: ", id);
-      return pet.id == id ? editForm : pet;
-
-  }) )
+  await getAndSetPets();
 
   toggleEdit();
 
@@ -151,17 +164,54 @@ function toggleAddPet() {
 
 
 function toggleEdit(id){
-    console.log("selected ID: ", id)
-    const currentPet = pets.filter(pet => pet.id === id)[0];
-    console.log("currentPet: ", currentPet);
-  
-    setEditForm(currentPet);
     setEditOpen(prev => !prev)
+
+    if(id == -1) return;
+  
+    console.log("selected ID: ", id)
+    const currentPet = pets.find(pet => pet.id === id);
+   
+
+    if (!currentPet) {
+    console.warn("No pet found with ID:", id);
+    return;
+    }
+
+    if(currentPet.estimate){
+      
+      const [hours, minutes] = currentPet.estimate.split(":");
+      console.log("hours: ", hours)
+      console.log("minutes: ", minutes);
+      setEditForm({...currentPet, estimateHours: hours, estimateMinutes: minutes})
+    }
+    else{
+      console.log("NO TIME");
+      setEditForm({...currentPet, estimateMinutes: "00", estimateHours: "01", amPM: "AM"})
+    }
+
+    
+    
+
+    
+    
     
 
     
 }
 
+function toggleCheck(id){
+
+    const currentPet = pets.filter(pet => pet.id === id)[0];
+
+    console.log("currentPet: ", currentPet);
+    console.log("isCheckOpen: ", isCheckOpen)
+    setCheck(prev => !prev);
+
+    setCurrentSelectedPet(currentPet);
+
+
+
+}
 
 function clearForm(){
   setForm({ name: '', type: '', breed: '' })
@@ -223,11 +273,19 @@ function clearForm(){
       toggleEdit = {toggleEdit}
       handleEdit={handleEdit}
 
-    
     />
     
+   
       </>
     }
+
+     <CheckPet 
+
+      toggleCheck = {toggleCheck}
+      currentSelectedPet = {currentSelectedPet}
+      isCheckOpen = {isCheckOpen}
+
+    />
       
       <ul>
         {pets.map((pet, index) => (
@@ -240,7 +298,7 @@ function clearForm(){
 
             : index == 1 ? <h2 key={pet.id + 1}> Waiting . . .</h2> : undefined
           }
-          <li key={pet.id} className={`petCard ${!user ? "petCardNoUser" : ""} ${index != 0 ? "normalCard" : ""}`}>
+          <li onClick={() => toggleCheck(pet.id)} key={pet.id} className={`petCard ${!user ? "petCardNoUser" : ""} ${index != 0 ? "normalCard" : ""}`}>
             
 
               <div className="topRowMainCard"> 
@@ -252,9 +310,13 @@ function clearForm(){
 }
               {user && <div className='buttonContainer'>
               
-              <button onClick={() => toggleEdit(pet.id)} className="editButton"> Edit</button>
+              <button onClick={(e) => { 
+                e.stopPropagation();
+                toggleEdit(pet.id)}} className="editButton"> Edit</button>
 
-              <button className='deleteButton'  onClick={() => handleDelete(pet.id)}> Delete </button>
+              <button className='deleteButton'  onClick={(e) => { 
+                e.stopPropagation();
+                handleDelete(pet.id)}}> Delete </button>
               
               
               </div>

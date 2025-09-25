@@ -10,7 +10,7 @@ const getData = async () => {
 }
 
 const addData = async (name, type, breed) => {
-    const {data, response, error} = await supabase.from("pets").insert({name: name, type: type, breed: breed}).select();
+    const {data, response, error} = await supabase.from("pets").insert({name: name, type: type, breed: breed, status: "Checked In"}).select().single();
 
     return {data, response, error}
 }

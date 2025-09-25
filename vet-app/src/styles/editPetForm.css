@@ -8,16 +8,32 @@
 .time-picker select{
     width: 100px;
     height: 50px;
-    font-size: 20pt;
+    font-size: 2rem;
     padding-left: 10px;
+    z-index: 9999;
+    position: relative;
+    
+   
 }
 
 .time-picker option{
-    font-size: 20pt;
+    font-size: 32pt;
+    
 }
 
 .timeTitle{
     font-size: 20pt;
     font-weight: 600;
     
+}
+
+.mainEditContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 900;
+    background-color: rgba(0, 0, 0, 0.5);
 }

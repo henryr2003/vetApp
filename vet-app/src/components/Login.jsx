@@ -7,6 +7,7 @@ import {useNavigate} from "react-router-dom"
 import {Link} from "react-router-dom"
 
 import "../styles/login.css"
+import "../styles/checkPet.css"
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

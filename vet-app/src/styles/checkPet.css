@@ -1,0 +1,95 @@
+.checkWindow{
+    display: none;
+}
+
+.checkWindow.open{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+    width: 90vw;
+    height: 60vh;
+    background-color: rgb(161, 196, 226);
+    display: flex;
+    
+   
+    flex-direction: column;
+    font-size: 32pt;
+    border-radius: 20px;
+    box-shadow: 0 0px 25px 0 rgba(0, 0, 0, 0.7);
+
+
+}
+
+
+
+.closeButton{
+    width: 50px;
+    height: 50px;
+    border: 1px solid;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.info h2{
+    font-size: 24pt;
+}
+
+.info h3{
+    font-size: 18pt;
+}
+
+.info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.progressBar{
+
+    height: 50px;
+    width: 100%;
+    border-radius: 30px;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.partProgress{
+    border: 1px solid;
+	height: 100%;
+	width: 33%;
+    background-color: gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: gray;
+}
+
+.start{
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+
+.end{
+    border-bottom-right-radius: 30px;
+    border-top-right-radius: 30px;
+}
+
+.text{
+    font-size: 16pt; 
+}
+
+.selected{
+    background-color: green;
+}

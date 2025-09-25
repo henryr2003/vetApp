@@ -10,13 +10,26 @@ function EditPetForm({editForm, setEditForm, toggleEdit, handleEdit, isEditOpen}
     const hours = range(1, 12);
     const minutes = range(0, 59);
 
+    let estimateHours = editForm.estimateHours;
+    let estimateMinutes = editForm.estimateMinutes;
+
+
+    console.log("estimateHours: ", estimateHours);
+    console.log("estimateMinutes: ", estimateMinutes);
+    
+    console.log("editForm on Open: ", editForm);
     return (
 
         <>
 
         {isEditOpen && 
-            <form className= {`addPetForm ${isEditOpen ? "open" : ""}`} onSubmit={(e) => handleEdit(e, editForm.id)}>
-      <div className='closeForm' onClick={() => toggleEdit()}> X </div>
+
+      <div className="mainEditContainer">
+
+
+      
+      <form className= {`addPetForm ${isEditOpen ? "open" : ""}`} onSubmit={(e) => handleEdit(e, editForm.id)}>
+      <div className='closeForm' onClick={() => toggleEdit(-1)}> X </div>
 
         <input placeholder="Name" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} />
 
@@ -33,7 +46,9 @@ function EditPetForm({editForm, setEditForm, toggleEdit, handleEdit, isEditOpen}
               name="petType"
               value="Dog"
               checked={editForm.type === "Dog"}
-              onChange={() => setEditForm({...editForm, type: "Dog"})}
+              onChange={() => {
+                setEditForm({...editForm, type: "Dog"}); 
+                console.log("currentEditForm: ", editForm);}}
 
             />
 
@@ -137,10 +152,11 @@ function EditPetForm({editForm, setEditForm, toggleEdit, handleEdit, isEditOpen}
         
         
         <div className="timeTitle"> Estimated Finish Time</div>
+        
         <div className="time-picker">
             <select
-                value={editForm.hour}
-                onChange={(e) => setEditForm({ ...editForm, hour: e.target.value })}
+                value={parseInt(editForm.estimateHours)}
+                onChange={(e) => setEditForm({...editForm, estimateHours: e.target.value})}
             >
                 {hours.map((h) => (
                 <option key={h} value={h}>
@@ -153,9 +169,9 @@ function EditPetForm({editForm, setEditForm, toggleEdit, handleEdit, isEditOpen}
             
             
             <select
-                value={editForm.minute}
-                onChange={(e) => setEditForm({ ...editForm, minute: e.target.value })}
-            >
+              value={parseInt(editForm.estimateMinutes)}
+              onChange={(e) => setEditForm({...editForm, estimateMinutes: e.target.value})}
+            > 
                 {minutes.map((m) => (
                 <option key={m} value={m}>
                     {m.toString().padStart(2, '0')}
@@ -164,17 +180,19 @@ function EditPetForm({editForm, setEditForm, toggleEdit, handleEdit, isEditOpen}
             </select>
 
             <select
-                value={editForm.amPm}
-                onChange={(e) => setEditForm({ ...editForm, amPm: e.target.value })}
+                value={editForm.amPM}
+                onChange={(e) => setEditForm({ ...editForm, amPM: e.target.value })}
             >
                 <option value="AM">AM</option>
                 <option value="PM">PM</option>
             </select>
-    </div>
+          </div>
 
         <button type="submit" >Save Changes</button>
 
     </form>
+
+    </div>
 }
         
         </>
