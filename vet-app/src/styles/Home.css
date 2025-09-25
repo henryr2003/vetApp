@@ -218,8 +218,21 @@ ul{
     
     border-color: #000000;
 }
+
+.petContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.petContainer h2{
+    width: 100%;
+    max-width: 500px;
+}
 .petCard{
     width: 100%;
+    max-width: 500px;
     max-height: 200px;
     min-height: 100px;
     background-color: #FF8C42;
@@ -314,3 +327,5 @@ ul{
 .estTime h3{
     text-align: center;
 }
+
+

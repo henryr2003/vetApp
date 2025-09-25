@@ -287,7 +287,7 @@ function clearForm(){
 
     />
       
-      <ul>
+      <ul className='petContainer'>
         {pets.map((pet, index) => (
           
           <>
